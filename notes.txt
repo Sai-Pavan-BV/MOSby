@@ -1,0 +1,2 @@
+MOS6502 is a 8 bit microprocessor with 8 bit data bus and 16bit address bus.
+6 registers: PC, Stack pointer accumulator,index register x,y,processor status
