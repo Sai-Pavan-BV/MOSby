@@ -1,11 +1,12 @@
 `include "adder.v"
 `include "l_shift.v"
+`include "r_shift.v"
 module alu_tb();
 reg en,sh_r,cin;
 reg[7:0] operand;
 wire[7:0] result;
 wire cout;
-l_shift ls(en,sh_r,cin,operand,cout,result);
+r_shift ls(en,sh_r,cin,operand,cout,result);
 integer i;
 initial begin
     $dumpfile("alu.vcd");
