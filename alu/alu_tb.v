@@ -1,21 +1,25 @@
 `include "adder.v"
+`include "l_shift.v"
 module alu_tb();
-reg cin;
-reg[7:0] a,b;
-wire cout,over;
-wire[7:0] s;
-
-adder ad(a,b,cin,s,cout,over);
+reg en,sh_r,cin;
+reg[7:0] operand;
+wire[7:0] result;
+wire cout;
+l_shift ls(en,sh_r,cin,operand,cout,result);
 integer i;
 initial begin
     $dumpfile("alu.vcd");
-    $dumpvars(1,ad);
-        for (i=0;i<10;i=i+1) begin
-            cin=$random;
-            a=$random;
-            b=$random;
-            #5;
-        end
+    $dumpvars(1,ls);
+    en=0;
+    operand=$random;
+    cin=1;
+    sh_r=1;
+    #10
+    en=1;
+    #20
+    sh_r=0;
+    #20;
+    $finish;
 
 end
     

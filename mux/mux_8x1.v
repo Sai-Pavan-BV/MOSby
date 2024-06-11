@@ -1,4 +1,4 @@
-module mux_8x1 #(width) (i0,i1,i2,i3,i4,i5,i6,i7,select,en,out);
+module mux_8x1 #(parameter width) (i0,i1,i2,i3,i4,i5,i6,i7,select,en,out);
 input wire[width-1:0] i0,i1,i2,i3,i4,i5,i6,i7;
 input wire[2:0] select;
 output wire[width-1:0] out;

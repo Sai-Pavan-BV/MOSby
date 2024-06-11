@@ -13,7 +13,7 @@ two_bit_adder_ov a4(a[7-:2],b[7-:2],c3,s_buff[7-:2],cout_buff,cov);
 assign over_buff=cov^cout;
 assign s=en?s_buff:8'hzz;
 assign cout=en?cout_buff:1'bz;
-assign over=en?over_buff:1.bz;
+assign over=en?over_buff:1'bz;
 endmodule
 
 module two_bit_adder(a,b,cin,s,cout);
