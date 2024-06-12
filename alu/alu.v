@@ -6,7 +6,7 @@ module alu(clk,rst,op,accumulator,operand_2,status,result,status_out);
 input wire clk,rst;
 input wire[3:0] op;
 input wire[7:0] accumulator,operand_2,status;
-output reg[7:0] result,status_out;
+output wire[7:0] result,status_out;
 
 reg[7:0] alu_sel,operand;
 
@@ -92,7 +92,7 @@ always @(posedge clk) begin
         end
     endcase
 end
-adder ad();
+adder ad(accumulator,operand,cin,alu_sel[0],result,status_out[7],status_out[1]);
 endmodule
 
 module and_l (
