@@ -9,7 +9,7 @@ input wire[3:0] op;
 input wire[7:0] accumulator,operand_2,status;
 output wire[7:0] result,status_out;
 
-wire[7:0] result_temp_adder,result_temp_sub,status_out_temp_add,status_out_temp_sub;
+wire[7:0] result_temp_adder,result_temp_sub,status_out_temp_add,status_out_temp_sub,result_temp_bypass;
 
 reg[7:0] alu_sel,operand;
 
@@ -17,7 +17,7 @@ reg cin,sh_r;
 
 //status reg contents : carry zero interrput_disable decimal_mode break_cmd overflow negative
 
-parameter ADD=0,ADC=1,SBC=2,AND=3,EOR=4,ORA=5,BIT=6,ASL=7,LSR=8,ROL=9,ROR=10;
+parameter ADD=0,ADC=1,SBC=2,AND=3,EOR=4,ORA=5,BIT=6,ASL=7,LSR=8,ROL=9,ROR=10,PASS=11;
 parameter add=7'b0000001,L_shift=7'b0000010,R_shift=7'b0000100,AND_L=7'b0001000,EOR_L=7'b0010000,ORA_L=7'b0100000,BIT_L=7'b1000000;
 always @(posedge clk) begin
     case (op)
@@ -98,20 +98,25 @@ end
 
 adder ad(accumulator,operand,cin,alu_sel[0],result_temp_adder,status_out_temp_add[7],status_out_temp_add[1]);
 adder ads(result_temp_adder,~{7'd0,status[7]},1'b1,alu_sel[0],result_temp_sub,status_out_temp_sub[7],status_out_temp_sub[1]);
-mux_2x1 #(8) m1(alu_sel[0],!(op==SBC),result_temp_adder,result_temp_sub,result);
+mux_2x1 #(8) m1(alu_sel[0],!(op==SBC),result_temp_adder,result_temp_sub,result_temp_bypass);
 mux_2x1 #(8) m2(alu_sel[0],!(op==SBC),status_out_temp_add,status_out_temp_sub,status_out);
-l_shift ls(alu_sel[1],sh_r,cin,operand,status_out[7],result);
-r_shift rs(alu_sel[2],sh_r,cin,operand,status_out[7],result);
-and_l an(alu_sel[3],accumulator,operand,result);
-eor_l er(alu_sel[4],accumulator,operand,result);
-ora_l ol(alu_sel[5],accumulator,operand,result);
-bit_l bt(alu_sel[6],accumulator,operand,result,status_out[1]);
+l_shift ls(alu_sel[1],sh_r,cin,operand,status_out[7],result_temp_bypass);
+r_shift rs(alu_sel[2],sh_r,cin,operand,status_out[7],result_temp_bypass);
+and_l an(alu_sel[3],accumulator,operand,result_temp_bypass);
+eor_l er(alu_sel[4],accumulator,operand,result_temp_bypass);
+ora_l ol(alu_sel[5],accumulator,operand,result_temp_bypass);
+bit_l bt(alu_sel[6],accumulator,operand,result_temp_bypass,status_out[1]);
+
+assign result=(op==PASS)?operand_2:result_temp_bypass;
 
 assign status_out[6]=~(|result);
 assign status_out[0]=result[7];
 
 
 endmodule
+
+
+
 
 module and_l (
     en,operand_1,operand_2,result

@@ -17,7 +17,7 @@ initial begin
     accumulator=8'd66;
     operand_2=8'd30;
     status=8'b00000000;
-    for (i=0;i<11;i=i+1) begin
+    for (i=0;i<12;i=i+1) begin
         op=i;
         #15;
     end
