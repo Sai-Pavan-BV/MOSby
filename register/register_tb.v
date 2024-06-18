@@ -30,11 +30,34 @@ initial begin
     $dumpvars(1,cg);
     clk=0;
     rst=0;
+    x_con=0;
+    y_con=0;
+    accumulator_con=0;
+    stack_pointer_con=0;
+    status_con=0;
+
+    data_in=$random;
+    data_status=$random;
+
     #10;
     rst=1;
     #15;
     rst=0;
-    #100
+    #15
+    x_con=1;
+    #40
+    x_con=0;
+    y_con=1;
+    #40;
+    y_con=0;
+    accumulator_con=1;
+    #40;
+    accumulator_con=0;
+    stack_pointer_con=1;
+    #40;
+    stack_pointer_con=0;
+    status_con=1;
+    #50
     $finish;
 end
 
