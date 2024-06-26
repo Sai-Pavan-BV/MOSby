@@ -11,7 +11,7 @@ reg[8:0] tag[127:0];
 reg hit_buff;
 reg[7:0] data_buffer;
 
-/*128 bytes of cache, 15:7 bits of address are tags
+/*  This is a direct mapped 128 bytes of cache, 15:7 bits of address are tags.
     the output change one when address changes, w_en should be stready before the address is changed.
     For some reason, using non-blocking assignments(for w_en and address ) works. */
 
