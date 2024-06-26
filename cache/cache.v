@@ -21,7 +21,7 @@ always @(posedge rst ) begin
     end
 end
 
-always @(w_en,address) begin
+always @(address) begin
     // if(clk_1) begin
         if(!w_en) begin             //read
             if(address[15:7]==tag[address[6:0]]) begin      //cache hit

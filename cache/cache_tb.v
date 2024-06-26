@@ -13,7 +13,7 @@ initial begin
     $dumpfile("cache.vcd");
     $dumpvars(1,c);
     clk_1=1;
-    data_buffer=$random;
+    data_buffer=8'd16;
     rst=0;
     address=$random;
     w_en=0;
@@ -22,13 +22,15 @@ initial begin
     #10;
     rst=0;
     address=0;
-    w_en=0;
     #10
     w_en=1;
-    address=$random;
-    #10
+    address=16'h0010;
+    #10;
     w_en=0;
-    #20
+    address=16'h0005;
+    #10
+    address=16'h0010;
+    #20;
     $finish;
 end
 endmodule
