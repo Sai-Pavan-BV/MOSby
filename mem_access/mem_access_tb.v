@@ -16,13 +16,31 @@ mem_access m(rst,clk_1,clk_2,en,pc_data,w_rd,
                     data_out,data_bus,
                     address_out);
 
-assign data_out=!(!rst&en&w_rd)?data_out_buff:8'hzz;
-assign data_bus=!(!rst&en&!w_rd)?data_bus_buff:8'hzz;
+assign data_out=(!rst&en&w_rd)?8'hzz:data_out_buff;
+assign data_bus=(!rst&en&!w_rd)?8'hzz:data_bus_buff;
 
 always #2 clk=~clk;
 initial begin
     $dumpfile("mem_access.vcd");
     $dumpvars(1,m);
+    clk<=0;
+    rst<=0;
+    data_bus_buff<=$random;
+    data_out_buff<=$random;
+    en<=0;
+    pc_data<=0;
+    w_rd<=0;
+    address<=$random;
+    pc<=$random;
+    #2
+    rst=1;
+    #1
+    rst=0;
+    en=0;
+    pc_data=1;
+    #8
+    pc_data=0;
+    #20
     $finish;
 end
 
