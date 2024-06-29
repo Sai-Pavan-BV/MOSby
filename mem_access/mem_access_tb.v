@@ -36,10 +36,16 @@ initial begin
     rst=1;
     #1
     rst=0;
-    en=0;
-    pc_data=1;
+    en=1;
+    w_rd=0;
     #8
-    pc_data=0;
+    en=0;
+    w_rd=0;
+    #6
+    en=1;
+    w_rd=1;
+    #8
+    en=0;
     #20
     $finish;
 end
