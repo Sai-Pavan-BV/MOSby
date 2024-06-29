@@ -9,7 +9,7 @@ output wire clk_1,clk_2;
 reg[1:0] counter;
 
 always @(posedge clk,posedge rst) begin
-    if(rst) counter=0;
+    if(rst) counter=2'b11;
     else  counter=counter+1;
 end
 assign clk_1=counter==0?1:0;
