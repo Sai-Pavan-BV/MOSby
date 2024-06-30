@@ -46,7 +46,7 @@ assign branch_op=branch_op_buffer;
 
 
 parameter ADC_Immediate =8'h69;
-
+parameter ADD=0,ADC=1,SBC=2,AND=3,EOR=4,ORA=5,BIT=6,ASL=7,LSR=8,ROL=9,ROR=10,PASS=11; //for alu
 /* LIST OF CONTROL SIGNALS
     cache w_rd (write or read cache);
     external memory access:en, pc_data,w_rd;
@@ -75,6 +75,18 @@ always @(negedge clk_2) begin
                                         increment_buffer=1;     //increment program counter
                                         update_ir=0;        //update instruction register
                                         w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=0;     //write to x register
+                                        y_con_buffer=0;     //write y register
+                                        accumulator_con_buffer=1;   //write to accumulator
+                                        status_con_buffer=1;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=ADC;     //ADC operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        
+
 
                                     end
                                 endcase
