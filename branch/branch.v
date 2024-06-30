@@ -30,7 +30,7 @@ always @(posedge rst ) begin        //reset sequence
     reset_counter=2;
     lower_byte_buffer=0;
     branch_internal=0;
-    pc_inc_internal=1;
+    pc_inc_internal=0;
 end
 
 always @(negedge clk_2 ) begin    
