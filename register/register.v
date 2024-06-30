@@ -27,7 +27,7 @@ always @(posedge rst) begin
     status<=0;
 end
 
-always @(posedge clk_2 ) begin
+always @(negedge clk_2 ) begin
     if(accumulator_con) accumulator=data_in;
     else if(x_con) x=data_in;
     else if(y_con) y=data_in;
