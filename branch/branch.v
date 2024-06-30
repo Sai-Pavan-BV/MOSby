@@ -1,11 +1,11 @@
-module branch (rst,clk_1,clk_2,branch_uncon,branch_con,
+module branch (rst,clk_1,clk_2,branch_uncon,branch_con,pc_inc_decoder,lower_byte_decoder,
                 branch_op,
-                status,data_bus,pc_inc_decoder,
-                branch,lower_byte,normal);
+                status,
+                branch,lower_byte,normal,pc_increment);
 
 input  wire rst,clk_1,clk_2,branch_uncon,branch_con,pc_inc_decoder,lower_byte_decoder;
 input wire[2:0] branch_op;
-input wire[7:0] status,data_bus;
+input wire[7:0] status;
 output wire branch,lower_byte,normal,pc_increment;
 
 reg branch_internal,test,pc_inc_internal;
