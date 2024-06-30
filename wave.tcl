@@ -1,0 +1,2 @@
+set sig_list [list clk_1 clk_2 rst normal address data_bus accumulator_con status_con alu_op data_out_accumulator operand_2 data_out_status data_alu_result data_status ] 
+gtkwave::addSignalsFromList $sig_list

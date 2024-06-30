@@ -64,7 +64,7 @@ mux_4x1 #(8) m1(1'b1,
     data_out_x,data_out_y,data_out_sp,data_bus,
     operand_2);
 
-alu a(clk_2,rst,alu_op,data_out_accumulator,operand_2,data_out_status,data_alu_result,data_status);
-
+alu a(clk_1,clk_2,rst,alu_op,data_out_accumulator,operand_2,data_out_status,data_alu_result,data_status);
+//check the status of alu
 
 endmodule

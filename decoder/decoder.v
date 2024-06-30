@@ -128,7 +128,7 @@ always @(negedge clk_2) begin
                         accumulator_con_buffer<=0;   //write to accumulator
                        status_con_buffer<=0;    //write to status register
                         stack_pointer_con_buffer<=0;  //write to stack pointer
-                        alu_op_buffer<=ADC;     //ADC operation
+                        alu_op_buffer<=PASS;     //ADC operation
                         branch_op_buffer<=3'hx;     //no branch
                         branch_uncon_buffer<=0;     //no unconditional branch
                         branch_con_buffer<=0;       // no conditional branch
@@ -146,7 +146,7 @@ always @(negedge clk_2) begin
                             accumulator_con_buffer<=0;   //write to accumulator
                            status_con_buffer<=0;    //write to status register
                             stack_pointer_con_buffer<=0;  //write to stack pointer
-                            alu_op_buffer<=ADC;     //ADC operation
+                            alu_op_buffer<=PASS;     //ADC operation
                             branch_op_buffer<=3'hx;     //no branch
                             branch_uncon_buffer<=0;     //no unconditional branch
                             branch_con_buffer<=0;       // no conditional branch
@@ -166,7 +166,7 @@ always @(negedge clk_2) begin
         accumulator_con_buffer<=0;   //write to accumulator
         status_con_buffer<=0;    //write to status register
         stack_pointer_con_buffer<=0;  //write to stack pointer
-        alu_op_buffer<=ADC;     //ADC operation
+        alu_op_buffer<=PASS;     //ADC operation
         branch_op_buffer<=3'hx;     //no branch
         branch_uncon_buffer<=0;     //no unconditional branch
         branch_con_buffer<=0;       // no conditional branch

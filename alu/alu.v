@@ -3,24 +3,19 @@
 `include "./alu/r_shift.v"
 //`include "mux.v"                      //turn on while testing alu individually
 
-module alu(clk,rst,op,accumulator,operand_2,status,result,status_out);
-input wire clk,rst;
+module alu(clk_1,clk_2,rst,op,accumulator,operand_2,status,result_out,status_out);
+input wire clk_1,clk_2,rst;
 input wire[3:0] op;
 input wire[7:0] accumulator,operand_2,status;
-output wire[7:0] result,status_out;
+output wire[7:0] result_out,status_out;
 
-wire[7:0] result_temp_adder,result_temp_sub,status_out_temp_add,status_out_temp_sub,result_temp_bypass;
+wire[7:0] result_temp_adder,result_temp_sub,status_out_temp_add,status_out_temp_sub,result_temp_bypass,
+        result;
 
 reg[7:0] alu_sel,operand;
-reg[7:0] accumulator_buffer;
+reg[7:0] accumulator_buffer,result_buffer;
 
 reg cin,sh_r;
-
-// always @(posedge clk) begin
-//     if(!rst) begin
-//         accumulator_buffer<=accumulator;
-//     end
-// end
 always @(posedge rst ) begin
         accumulator_buffer<=0;
 end
@@ -29,83 +24,83 @@ end
 
 parameter ADD=0,ADC=1,SBC=2,AND=3,EOR=4,ORA=5,BIT=6,ASL=7,LSR=8,ROL=9,ROR=10,PASS=11;
 parameter add=7'b0000001,L_shift=7'b0000010,R_shift=7'b0000100,AND_L=7'b0001000,EOR_L=7'b0010000,ORA_L=7'b0100000,BIT_L=7'b1000000;
-always @(posedge clk) begin
+always @(posedge clk_1) begin
+        result_buffer<=result;
         if(!rst) begin
         case (op)
                 ADD: begin
                         alu_sel=add;
                         cin=0;
-                        operand=operand_2;
                         sh_r=1'bx;
                 end
                 ADC: begin
                         alu_sel=add;
                         cin=status[7];
-                        operand=operand_2;
                         sh_r=1'bx;
                 end
                 SBC: begin
                         alu_sel=add;
                         cin=1'b1;
-                        operand=~operand_2;
                         sh_r=1'bx;
                 end
                 AND: begin
                         alu_sel=AND_L;
                         cin=1'bx;
-                        operand=operand_2;
                         sh_r=1'bx;
                 end
                 EOR: begin
                         alu_sel=EOR_L;
                         cin=1'bx;
-                        operand=operand_2;
                         sh_r=1'bx;
                 end
                 ORA: begin
                         alu_sel=ORA_L;
                         cin=1'bx;
-                        operand=operand_2;
                         sh_r=1'bx;
                 end
                 BIT: begin
                         alu_sel=BIT_L;
                         cin=1'bx;
-                        operand=operand_2;
                         sh_r=1'bx;
                 end
                 ASL: begin
                         alu_sel=L_shift;
                         cin=status[7];
-                        operand=operand_2;
                         sh_r=1'b1;
                 end
                 LSR: begin
                         alu_sel=R_shift;
                         cin=status[7];
-                        operand=operand_2;
                         sh_r=1'b1;
                 end
                 ROL: begin
                         alu_sel=L_shift;
                         cin=status[7];
-                        operand=operand_2;
                         sh_r=1'b0;
                 end
                 ROR: begin
                         alu_sel=R_shift;
                         cin=status[7];
-                        operand=operand_2;
                         sh_r=1'b0;
                 end
                 default: begin
                 alu_sel=0;
-                operand=operand_2;
                 cin=0;
                 sh_r=1'bx;
                 end
         endcase
         end
+end
+always @(posedge clk_2) begin
+    if(!rst) begin
+        accumulator_buffer<=accumulator;
+        if(op==SBC) begin
+                operand<=~operand_2;
+        end
+        else begin
+                operand<=operand_2;
+        end
+    end
 end
 
 adder ad(accumulator_buffer,operand,cin,alu_sel[0],result_temp_adder,status_out_temp_add[7],status_out_temp_add[1]);
@@ -123,6 +118,7 @@ assign result=(op==PASS)?operand_2:result_temp_bypass;
 
 assign status_out[6]=~(|result);
 assign status_out[0]=result[7];
+assign result_out=result_buffer;
 
 
 endmodule
