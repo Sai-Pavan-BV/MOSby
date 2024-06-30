@@ -2,6 +2,7 @@
 `include "./branch/branch.v"
 `include "./pc/pc.v"
 `include "./clk_gen/clk_gen.v"
+`include "./cache/cache.v"
 module mosby (clk,rst,
                 branch_uncon,branch_con,pc_inc_decoder,lower_byte_decoder,
                 branch_op,
@@ -26,5 +27,12 @@ branch br (rst,clk_1,clk_2,branch_uncon,branch_con,pc_inc_decoder,lower_byte_dec
                 branch_op,
                 status,
                 branch,lower_byte,normal,pc_increment);
-assign data_bus=8'h69;
+
+cache c( rst,clk_1,clk_2,w_rd,
+                address,
+                hit,
+                data);
+
+
+
 endmodule

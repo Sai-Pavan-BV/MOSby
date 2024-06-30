@@ -22,6 +22,8 @@ always @(posedge rst ) begin
         tag[i]=0;
         mem[0]=8'h69;
         mem[1]=8'h03;
+        mem[2]=8'h69;
+        mem[3]=8'h04;
     end
 end
 

@@ -1,6 +1,10 @@
 module decoder (
     rst,clk_1,clk_2,flush,normal,
     instruction,
+     w_rd,pc_data,increment,lower_byte,
+     x_con,y_con,accumulator_con,status_con,stack_pointer_con,
+     branch_uncon,branch_con,
+    alu_op,branch_op,operand_mux_con
 );
 
 input wire rst,clk_1,clk_2,flush,normal;
@@ -14,12 +18,11 @@ output wire w_rd,       //memory write or read
 
 output wire[3:0] alu_op;            //alu controls
 output wire [2:0] branch_op;        //branch controls
-output wire[1:0] operand_mux_con    //control for operand_2 input for alu
-output wire[7:0] immediate;
+output wire[1:0] operand_mux_con;    //control for operand_2 input for alu
 
 reg update_ir;
 reg[2:0] counter;
-reg[7:0] instruction_register;
+reg[7:0] instruction_register, data_bus;
 
 reg w_rd_buffer,
     pc_data_buffer,
@@ -90,14 +93,14 @@ always @(negedge clk_2) begin
                                         branch_op_buffer=3'hx;     //no branch
                                         branch_uncon_buffer=0;     //no branch
                                         branch_con_buffer=0;       //no branch
-                                        operand_mux_con_buffer=3    //immediate is added to accumulator
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
 
                                     end
                                 endcase
                             end
             NOP: begin
-                        increment_buffer=1;     //increment program counter
-                        update_ir=1;
+                        increment_buffer<=1;     //increment program counter
+                        update_ir<=1;
                         w_rd_buffer<=0;      //read the immediate
                         pc_data_buffer<=1;   //address from pc
                         x_con_buffer<=0;     //write to x register

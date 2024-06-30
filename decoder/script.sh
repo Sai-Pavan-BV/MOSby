@@ -1,4 +1,9 @@
 #!/bin/bash
 iverilog -o temp decoder.v
-sleep 3
 rm temp
+
+iverilog -o decoder decoder_tb.v
+vvp decoder
+gtkwave decoder.vcd
+rm decoder
+rm decoder.vcd
