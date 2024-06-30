@@ -4,7 +4,6 @@ iverilog -o temp branch.v
 rm temp
 git add --all
 nill=""
-echo $1
 if [ $1 == $nill ]
 then
     git commit -m"nil"
