@@ -36,6 +36,7 @@ initial begin
     flush=0;
     normal=1;
     instruction=$random;
+    wait(clk==1);
     #10 rst=1;
     #5 rst=0;
     #30
@@ -44,6 +45,7 @@ initial begin
     instruction=8'h69;
     #30
     instruction=8'hEA;
+    #30
     $finish;
 end
 

@@ -82,6 +82,7 @@ always @(negedge clk_2) begin
                                     0: begin
                                         increment_buffer=1;     //increment program counter
                                         update_ir=0;        //update instruction register
+                                        lower_byte_buffer=0;
                                         w_rd_buffer=0;      //read the immediate
                                         pc_data_buffer=1;   //address from pc
                                         x_con_buffer=0;     //write to x register
@@ -101,6 +102,7 @@ always @(negedge clk_2) begin
             NOP: begin
                         increment_buffer<=1;     //increment program counter
                         update_ir<=1;
+                        lower_byte_buffer=0;
                         w_rd_buffer<=0;      //read the immediate
                         pc_data_buffer<=1;   //address from pc
                         x_con_buffer<=0;     //write to x register
@@ -118,6 +120,7 @@ always @(negedge clk_2) begin
             default: begin      //nop
                             increment_buffer=1;     //increment program counter
                             update_ir=1;
+                            lower_byte_buffer=0;
                             w_rd_buffer<=0;      //read the immediate
                             pc_data_buffer<=1;   //address from pc
                             x_con_buffer<=0;     //write to x register
