@@ -24,7 +24,7 @@ parameter bcc = 0, // Branch if carry flag clear
 assign lower_byte=lower_byte_buffer|(normal&lower_byte_decoder);
 assign normal=reset_counter==0;
 assign branch=branch_uncon|branch_con&test|branch_internal;
-assign pc_increment=pc_inc_internal?1:pc_inc_decoder;
+assign pc_increment=normal?pc_inc_decoder:pc_inc_internal;
 
 always @(posedge rst ) begin        //reset sequence
     reset_counter=2;
