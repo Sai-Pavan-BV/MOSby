@@ -2,6 +2,8 @@
 clear
 iverilog -o temp branch.v
 rm temp
-git add --all
-git commit --reuse-message=HEAD
-
+iverilog -o branch branch_tb.v
+vvp branch
+gtkwave branch.vcd & sleep 1
+rm branch.vcd
+rm branch 
