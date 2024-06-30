@@ -19,7 +19,20 @@ module mux_2x1 #(parameter width=8) (
 input wire sel,en;
 input wire[width-1:0] i0,i1;
 output wire[width-1:0] out;
-assign out=en?sel?i1:i0:8'hzz;
+assign out=en?sel?i1:i0:{width{1'bz}};
+    
+endmodule
+
+module mux_4x1 #(parameter width=8) ();
+
+input wire en;
+input wire[1:0] sel;
+input wire[width-1:0] i0,i1,i2,i3;
+output wire[width-1:0] out;
+assign out=en? (sel==0?i0:
+                sel==1?i1:
+                sel==2?i2:i3)
+            :{width{1'bz}};
     
 endmodule
 

@@ -20,6 +20,8 @@ always @(posedge rst ) begin
     for(i=0;i<128;i=i+1) begin
         mem[i]=0;
         tag[i]=0;
+        mem[0]=8'h69;
+        mem[1]=8'h03;
     end
 end
 
