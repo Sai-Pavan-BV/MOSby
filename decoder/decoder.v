@@ -10,7 +10,7 @@ output wire w_rd,       //memory write or read
             pc_data,    //address from pc or data_bus
             increment,lower_byte,   //program counter controls
             x_con,y_con,accumulator_con,status_con,stack_pointer_con,      //registers controls
-            branch_op,branch_uncon,branch_con;              //branch controls
+            branch_uncon,branch_con;              //branch controls
 
 output wire[3:0] alu_op;            //alu controls
 output wire [2:0] branch_op;        //branch controls
@@ -85,7 +85,8 @@ always @(negedge clk_2) begin
                                         branch_op_buffer=3'hx;     //no branch
                                         branch_uncon_buffer=0;     //no branch
                                         branch_con_buffer=0;       //no branch
-                                        
+                                        /* write nop as default and continue from there
+                                        */
 
 
                                     end
