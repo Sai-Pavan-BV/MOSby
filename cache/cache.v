@@ -24,10 +24,15 @@ always @(posedge rst ) begin
         mem[1]=8'h03;
         mem[2]=8'h69;
         mem[3]=8'h04;
+        mem[7'b1001010]=8'h00;
+        tag[7'b1001010]=9'b111111111;
+        mem[17'b1001011]=8'h00;
+        tag[17'b1001011]=9'b111111111;
     end
+    hit_buff=0;
 end
 
-always @(address) begin
+always @(clk_1) begin
      if(clk_1) begin
         if(!w_rd) begin             //read
             if(address[15:7]==tag[address[6:0]]) begin      //cache hit

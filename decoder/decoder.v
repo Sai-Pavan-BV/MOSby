@@ -95,7 +95,25 @@ always @(negedge clk_2) begin
                                         branch_uncon_buffer=0;     //no branch
                                         branch_con_buffer=0;       //no branch
                                         operand_mux_con_buffer=3;    //immediate is added to accumulator
-
+                                        counter=1;
+                                    end
+                                    1: begin
+                                        increment_buffer=1;     //increment program counter
+                                        update_ir=1;        //update instruction register
+                                        lower_byte_buffer=0;
+                                        w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=0;     //write to x register
+                                        y_con_buffer=0;     //write y register
+                                        accumulator_con_buffer=0;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=ADC;     //ADC operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        counter=0;
                                     end
                                 endcase
                             end
@@ -136,6 +154,24 @@ always @(negedge clk_2) begin
                             counter=0;
                     end
         endcase
+    end
+    else begin      //not in normal mode
+        increment_buffer=1;     //increment program counter
+        update_ir=1;
+        lower_byte_buffer=0;
+        w_rd_buffer<=0;      //read the immediate
+        pc_data_buffer<=1;   //address from pc
+        x_con_buffer<=0;     //write to x register
+        y_con_buffer<=0;     //write y register
+        accumulator_con_buffer<=0;   //write to accumulator
+        status_con_buffer<=0;    //write to status register
+        stack_pointer_con_buffer<=0;  //write to stack pointer
+        alu_op_buffer<=ADC;     //ADC operation
+        branch_op_buffer<=3'hx;     //no branch
+        branch_uncon_buffer<=0;     //no unconditional branch
+        branch_con_buffer<=0;       // no conditional branch
+        operand_mux_con_buffer<=2'hx; // operand_2 is not required
+        counter=0;        
     end
 end
     

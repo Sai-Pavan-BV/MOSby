@@ -1,7 +1,7 @@
-`include "adder.v"
-`include "l_shift.v"
-`include "r_shift.v"
-`include "../mux.v"
+`include "./alu/adder.v"                //please change the addresses accordingly
+`include "./alu/l_shift.v"
+`include "./alu/r_shift.v"
+//`include "mux.v"                      //turn on while testing alu individually
 
 module alu(clk,rst,op,accumulator,operand_2,status,result,status_out);
 input wire clk,rst;
@@ -16,11 +16,11 @@ reg[7:0] accumulator_buffer;
 
 reg cin,sh_r;
 
-always @(posedge clk) begin
-    if(!rst) begin
-        accumulator_buffer<=accumulator;
-    end
-end
+// always @(posedge clk) begin
+//     if(!rst) begin
+//         accumulator_buffer<=accumulator;
+//     end
+// end
 always @(posedge rst ) begin
         accumulator_buffer<=0;
 end
@@ -110,8 +110,8 @@ end
 
 adder ad(accumulator_buffer,operand,cin,alu_sel[0],result_temp_adder,status_out_temp_add[7],status_out_temp_add[1]);
 adder ads(result_temp_adder,~{7'd0,status[7]},1'b1,alu_sel[0],result_temp_sub,status_out_temp_sub[7],status_out_temp_sub[1]);
-mux_2x1 #(8) m1(alu_sel[0],!(op==SBC),result_temp_adder,result_temp_sub,result_temp_bypass);
-mux_2x1 #(8) m2(alu_sel[0],!(op==SBC),status_out_temp_add,status_out_temp_sub,status_out);
+mux_2x1 #(8) ma1(alu_sel[0],!(op==SBC),result_temp_adder,result_temp_sub,result_temp_bypass);
+mux_2x1 #(8) ma2(alu_sel[0],!(op==SBC),status_out_temp_add,status_out_temp_sub,status_out);
 l_shift ls(alu_sel[1],sh_r,cin,operand,status_out[7],result_temp_bypass);
 r_shift rs(alu_sel[2],sh_r,cin,operand,status_out[7],result_temp_bypass);
 and_l an(alu_sel[3],accumulator_buffer,operand,result_temp_bypass);

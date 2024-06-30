@@ -23,7 +23,12 @@ assign out=en?sel?i1:i0:{width{1'bz}};
     
 endmodule
 
-module mux_4x1 #(parameter width=8) ();
+module mux_4x1 #(parameter width=8) (
+    en,
+    sel,
+    i0,i1,i2,i3,
+    out
+);
 
 input wire en;
 input wire[1:0] sel;
