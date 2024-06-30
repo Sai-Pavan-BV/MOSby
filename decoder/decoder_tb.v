@@ -31,8 +31,20 @@ always #5 clk=~clk;
 initial begin
     $dumpfile("decoder.vcd");
     $dumpvars(1,d);
-    $finish;
     clk=0;
+    rst=0;
+    flush=0;
+    normal=1;
+    instruction=$random;
+    #10 rst=1;
+    #5 rst=0;
+    #30
+    instruction=$random;
+    #30
+    instruction=8'h69;
+    #30
+    instruction=8'hEA;
+    $finish;
 end
 
 endmodule
