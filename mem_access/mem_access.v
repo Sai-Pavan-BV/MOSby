@@ -16,15 +16,13 @@ always @(posedge rst ) begin
     data_bus_buff<=0;
     data_out_buff<=0;
 end
-always @(posedge clk_1 ) begin
+always @(negedge clk_1 ) begin
     if(en) begin
         if(w_rd) begin //write
             data_out_buff=data_bus;
         end
     end
-end
-always @(posedge clk_2 ) begin
-    if (en) begin
+    else begin
         if(!w_rd) begin //read
         data_bus_buff=data_out;
         end

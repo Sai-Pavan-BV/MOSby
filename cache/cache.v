@@ -24,7 +24,7 @@ always @(posedge rst ) begin
 end
 
 always @(address) begin
-    // if(clk_1) begin
+     if(clk_1) begin
         if(!w_rd) begin             //read
             if(address[15:7]==tag[address[6:0]]) begin      //cache hit
                 hit_buff<=1;
@@ -40,7 +40,7 @@ always @(address) begin
             mem[address[6:0]]<=data;
             tag[address[6:0]]<=address[15:7];
         end
-    //end
+    end
 end
     assign data=w_rd?8'hzz:data_buffer;
     assign hit=hit_buff;
