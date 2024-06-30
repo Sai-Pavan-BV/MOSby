@@ -2,7 +2,7 @@ module branch ();
 input  wire rst,clk_1,clk_2,branch_uncon,branch_con;
 input wire[2:0] branch_op;
 input wire[7:0] status,data_bus,pc_inc_decoder;
-output wire branch,lower_byte,normal,branch;
+output wire branch,lower_byte,normal;
 
 reg branch_internal,test;
 reg lower_byte_buffer;
