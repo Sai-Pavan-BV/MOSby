@@ -25,7 +25,7 @@ This processor has an 8-bit data bus and a 16-bit address bus. It is a two-stage
 
 
 ## References
-Architecture: www.6502.org
-Data Sheet: https://www.princeton.edu/~mae412/HANDOUTS/Datasheets/6502.pdf
-Verilog: [ChipVerify](https://www.chipverify.com/), Verilog HDL: A Guide to Digital Design and Synthesis by Samir Palnitkar
+### Architecture: www.6502.org
+### Data Sheet: https://www.princeton.edu/~mae412/HANDOUTS/Datasheets/6502.pdf
+### Verilog: [ChipVerify](https://www.chipverify.com/), Verilog HDL: A Guide to Digital Design and Synthesis by Samir Palnitkar
 
