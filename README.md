@@ -15,4 +15,9 @@ This processor has 8-bit data bus and 16-bit address bus. It is a two stage pipe
 * In order to reduce hardware I wanted to use a single unit for addition and subtraction. Designing a Look Ahead Adder which can do subtraction with borrow.
 * I have only added and tested ADC, LDA,LDX, LDY and NOP for immediate instructions. While the present design could be used to add most of instructions, new designs is needed for other instructions.
 * Implementing Interupts
-* 
+
+
+## References
+Architecture: (http://www.6502.org/)
+Verilog: [ChipVerify](https://www.chipverify.com/), Verilog HDL: A Guide to Digital Design and Synthesis by Samir Palnitkar
+
