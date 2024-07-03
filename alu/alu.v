@@ -1,7 +1,7 @@
 `include "./alu/adder.v"                //please change the addresses accordingly
 `include "./alu/l_shift.v"
 `include "./alu/r_shift.v"
-//`include "./mux.v"                      //turn on while testing alu individually
+//`include "../mux.v"                      //turn on while testing alu individually
 
 module alu(rst,clk_1,clk_2,accumulator,operand_2,status_in,alu_op,result,status_out);
 
@@ -58,7 +58,7 @@ ora_l org(alu_sel[3],accumulator_buffer,operand_2_buffer,result_buff);
 
 bit_l bit(alu_sel[4],accumulator_buffer,operand_2_buffer,result_buff,status_out[2]);
 
-mux_2x1 #(8) m1(1'b1,|alu_sel,accumulator_buffer,result_buff,result);
+mux_2x1 #(8) m1(1'b1,|alu_sel,operand_2_buffer,result_buff,result);
 
 assign status_out[7]=(alu_sel[0]|alu_sel[5]|alu_sel[6])?cout:status_buffer[7];              //carry
 assign status_out[6]=alu_op==PASS?status_buffer[6]:~|result_buff;              //zero

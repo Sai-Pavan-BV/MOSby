@@ -24,8 +24,10 @@ always @(posedge rst ) begin
         mem[1]=8'h03;
         mem[2]=8'h69;
         mem[3]=8'h04;
-        mem[4]=8'h69;
+        mem[4]=8'hA9;
         mem[5]=8'h05;
+        mem[6]=8'h69;
+        mem[7]=8'h02;
         mem[7'b1001010]=8'h00;
         tag[7'b1001010]=9'b111111111;
         mem[17'b1001011]=8'h00;

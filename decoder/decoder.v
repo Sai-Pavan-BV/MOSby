@@ -4,7 +4,8 @@ module decoder (
      w_rd,pc_data,increment,lower_byte,
      x_con,y_con,accumulator_con,status_con,stack_pointer_con,
      branch_uncon,branch_con,
-    alu_op,branch_op,operand_mux_con
+    alu_op,branch_op,operand_mux_con,
+    access_type
 );
 
 input wire rst,clk_1,clk_2,flush,normal;
@@ -19,7 +20,7 @@ output wire w_rd,       //memory write or read
 output wire[3:0] alu_op;            //alu controls
 output wire [2:0] branch_op;        //branch controls
 output wire[1:0] operand_mux_con;    //control for operand_2 input for alu
-
+output wire[1:0] access_type;        //control for memory access
 reg update_ir;
 reg[2:0] counter;
 reg[7:0] instruction_register, data_bus;
@@ -32,7 +33,7 @@ reg w_rd_buffer,
 
 reg[3:0] alu_op_buffer;
 reg[2:0] branch_op_buffer;
-reg[1:0] operand_mux_con_buffer;
+reg[1:0] operand_mux_con_buffer,access_type_buffer;
 
 assign w_rd=w_rd_buffer;
 assign pc_data=pc_data_buffer;
@@ -48,12 +49,17 @@ assign branch_con=branch_con_buffer;
 assign alu_op=alu_op_buffer;
 assign branch_op=branch_op_buffer;
 assign operand_mux_con=operand_mux_con_buffer;
+assign access_type=access_type_buffer;
 
 
 parameter ADC_Immediate =8'h69,        //actual op code immediate ADC instruction
-            NOP=8'hEA;
+            NOP=8'hEA,                //no operation        
+            LDA_Immediate=8'hA9,      //load accumulator with immediate
+            LDX_Immediate=8'hA2,      //load x register with immediate
+            LDY_Immediate=8'hA0;      //load y register with immediate
 parameter ADD=0,ADC=1,SBC=2,AND=3,EOR=4,ORA=5,BIT=6,ASL=7,LSR=8,ROL=9,ROR=10,PASS=11; //for alu
 parameter X=0,Y=1,SP=2,IMM=3;
+parameter ZERO=0,STACK=1,PC=2,ABSOL=3;
 /* LIST OF CONTROL SIGNALS
     cache w_rd (write or read cache);
     external memory access:en, pc_data,w_rd;
@@ -65,6 +71,7 @@ parameter X=0,Y=1,SP=2,IMM=3;
 always @(posedge rst) begin
     counter=0;
     update_ir=1;
+    access_type_buffer=PC;
 end
 
 always @(posedge clk_2) begin           //test this out
@@ -95,6 +102,7 @@ always @(negedge clk_2) begin
                                         branch_uncon_buffer=0;     //no branch
                                         branch_con_buffer=0;       //no branch
                                         operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
                                         counter=1;
                                     end
                                     1: begin
@@ -108,13 +116,140 @@ always @(negedge clk_2) begin
                                         accumulator_con_buffer=1;   //write to accumulator
                                         status_con_buffer=1;    //write to status register
                                         stack_pointer_con_buffer=0;  //write to stack pointer
-                                        alu_op_buffer=ADC;     //ADC operation
+                                        alu_op_buffer=PASS;     //ADC operation
                                         branch_op_buffer=3'hx;     //no branch
                                         branch_uncon_buffer=0;     //no branch
                                         branch_con_buffer=0;       //no branch
                                         operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
                                         counter=0;
                                     end
+                                endcase
+                            end
+            LDA_Immediate: begin
+                                case(counter)
+                                    0: begin
+                                        increment_buffer=1;     //increment program counter
+                                        update_ir=0;        //update instruction register
+                                        lower_byte_buffer=0;
+                                        w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=0;     //write to x register
+                                        y_con_buffer=0;     //write y register
+                                        accumulator_con_buffer=0;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=PASS;     //PASS operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
+                                        counter=1;
+                                    end
+                                1: begin
+                                        increment_buffer=1;     //increment program counter
+                                        update_ir=1;        //update instruction register
+                                        lower_byte_buffer=0;
+                                        w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=0;     //write to x register
+                                        y_con_buffer=0;     //write y register
+                                        accumulator_con_buffer=1;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=PASS;     //ADC operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
+                                        counter=0;
+                                end
+                                endcase
+                            end
+            LDX_Immediate: begin
+                                case(counter)
+                                    0: begin
+                                        increment_buffer=1;     //increment program counter
+                                        update_ir=0;        //update instruction register
+                                        lower_byte_buffer=0;
+                                        w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=0;     //write to x register
+                                        y_con_buffer=0;     //write y register
+                                        accumulator_con_buffer=0;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=PASS;     //ADC operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
+                                        counter=1;
+                                    end
+                                1: begin
+                                        increment_buffer=1;     //increment program counter
+                                        update_ir=1;        //update instruction register
+                                        lower_byte_buffer=0;
+                                        w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=1;     //write to x register
+                                        y_con_buffer=0;     //write y register
+                                        accumulator_con_buffer=0;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=PASS;     //ADC operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
+                                        counter=0;
+                                end
+                                endcase
+                            end
+            LDY_Immediate: begin
+                                case(counter)
+                                    0: begin
+                                        increment_buffer=1;     //increment program counter
+                                        update_ir=0;        //update instruction register
+                                        lower_byte_buffer=0;
+                                        w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=0;     //write to x register
+                                        y_con_buffer=0;     //write y register
+                                        accumulator_con_buffer=0;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=PASS;     //ADC operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
+                                        counter=1;
+                                    end
+                                1: begin
+                                        increment_buffer=1;     //increment program counter
+                                        update_ir=1;        //update instruction register
+                                        lower_byte_buffer=0;
+                                        w_rd_buffer=0;      //read the immediate
+                                        pc_data_buffer=1;   //address from pc
+                                        x_con_buffer=0;     //write to x register
+                                        y_con_buffer=1;     //write y register
+                                        accumulator_con_buffer=0;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
+                                        stack_pointer_con_buffer=0;  //write to stack pointer
+                                        alu_op_buffer=PASS;     //ADC operation
+                                        branch_op_buffer=3'hx;     //no branch
+                                        branch_uncon_buffer=0;     //no branch
+                                        branch_con_buffer=0;       //no branch
+                                        operand_mux_con_buffer=3;    //immediate is added to accumulator
+                                        access_type_buffer=PC;
+                                        counter=0;
+                                end
                                 endcase
                             end
             NOP: begin
@@ -132,7 +267,8 @@ always @(negedge clk_2) begin
                         branch_op_buffer<=3'hx;     //no branch
                         branch_uncon_buffer<=0;     //no unconditional branch
                         branch_con_buffer<=0;       // no conditional branch
-                        operand_mux_con_buffer<=2'hx; // operand_2 is not required
+                        operand_mux_con_buffer<=IMM; // operand_2 is not required
+                        access_type_buffer<=PC;
                         counter=0;
                 end 
             default: begin      //nop
@@ -150,7 +286,8 @@ always @(negedge clk_2) begin
                             branch_op_buffer<=3'hx;     //no branch
                             branch_uncon_buffer<=0;     //no unconditional branch
                             branch_con_buffer<=0;       // no conditional branch
-                            operand_mux_con_buffer<=2'hx; // operand_2 is not required
+                            operand_mux_con_buffer<=IMM; // operand_2 is not required
+                            access_type_buffer<=PC;
                             counter=0;
                     end
         endcase
