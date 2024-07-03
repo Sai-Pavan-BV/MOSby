@@ -23,7 +23,8 @@ This processor has an 8-bit data bus and a 16-bit address bus. It is a two-stage
 * Due to different address sizes and data sizes coupled with my out-of-place timing operations, the microprocessor takes more cycles than required to execute an instruction.
 * The design could not be pipelined well.
 
-
+## Tools Used
+Iverilog ,GTKwave and Yosys. 
 ## References
 #### Architecture: www.6502.org
 #### Data Sheet: https://www.princeton.edu/~mae412/HANDOUTS/Datasheets/6502.pdf
