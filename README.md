@@ -21,7 +21,7 @@ This processor has 8-bit data bus and 16-bit address bus. It is a two stage pipe
 ## Challenges
 *  I could not find any data regarding the original logic used in the processor. I tried my best to replicate the Instruction Set using logic elements i am aware of. But I have no idea how close my design is to the original microprocessor
 *  Due to different address size and data size coupled with my out of the place timing operations, the microprocessor takes more cycles than required to execute an instruction.
-*  The design could not be pipeline well.
+*  The design could not be pipelined well.
 
 
 ## References
