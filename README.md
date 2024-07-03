@@ -9,4 +9,10 @@ This processor has 8-bit data bus and 16-bit address bus. It is a two stage pipe
 ## Changes
 * The original processor uses a clock source and its invertion for sequencial operantions. To make most the logic edge triggered, I used a frequency divided and a two clocks with different phases for the clock.
 * I have added a 128 byte direct mapped cache for faster operations as used in modern processors.
+
+## Possible Improvements
+* Changing the cache to a better one like a 2,4 way associative mapping.
+* In order to reduce hardware I wanted to use a single unit for addition and subtraction. Designing a Look Ahead Adder which can do subtraction with borrow.
+* I have only added and tested ADC, LDA,LDX, LDY and NOP for immediate instructions. While the present design could be used to add most of instructions, new designs is needed for other instructions.
+* Implementing Interupts
 * 
