@@ -48,7 +48,7 @@ end
 adder ad(alu_sel[0],(alu_op==SBC?1'b0:1'b1),accumulator_buffer,operand_2_buffer,status_buffer[7],result_buff,cout);
 l_shift ls (alu_sel[5],(alu_op==ASL?1'b1:1'b0),status_buffer[7],accumulator_buffer,cout,result_buff);
 
-r_shift rs(alu_sel[6],(alu_op==LSR?1'b1:1'b0),status_buffer[7],accumulator_buffer,cout,result_buff);
+r_shift rs (alu_sel[6],(alu_op==LSR?1'b1:1'b0),status_buffer[7],accumulator_buffer,cout,result_buff);
 
 and_l an(alu_sel[1],accumulator_buffer,operand_2_buffer,result_buff);
 
