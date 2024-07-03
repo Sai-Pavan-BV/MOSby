@@ -1,129 +1,76 @@
-`include "./alu/adder.v"                //please change the addresses accordingly
-`include "./alu/l_shift.v"
-`include "./alu/r_shift.v"
-//`include "mux.v"                      //turn on while testing alu individually
+`include "adder.v"                //please change the addresses accordingly
+`include "l_shift.v"
+`include "r_shift.v"
+`include "../mux.v"                      //turn on while testing alu individually
 
-module alu(clk_1,clk_2,rst,op,accumulator,operand_2,status,result_out,status_out);
-input wire clk_1,clk_2,rst;
-input wire[3:0] op;
-input wire[7:0] accumulator,operand_2,status;
-output wire[7:0] result_out,status_out;
+module alu(rst,clk_1,clk_2,accumulator,operand_2,status_in,alu_op,result,status_out);
 
-wire[7:0] result_temp_adder,result_temp_sub,status_out_temp_add,status_out_temp_sub,result_temp_bypass,
-        result;
+input wire rst,clk_1,clk_2;
+input wire[7:0] accumulator,operand_2,status_in;
+input wire[3:0] alu_op;
+output wire[7:0] result,status_out;
 
-reg[7:0] alu_sel,operand;
-reg[7:0] accumulator_buffer,result_buffer;
-
-reg cin,sh_r;
-always @(posedge rst ) begin
-        accumulator_buffer<=0;
-end
+wire cout;
+reg[7:0] accumulator_buffer,operand_2_buffer,status_buffer;
+wire[7:0] result_buff;
+parameter ADD=0,ADC=1,SBC=2,AND=3,EOR=4,ORA=5,BIT=6,ASL=7,LSR=8,ROL=9,ROR=10,PASS=11; //for alu
+reg[6:0] alu_sel;
 
 //status reg contents : carry zero interrput_disable decimal_mode break_cmd overflow negative
 
-parameter ADD=0,ADC=1,SBC=2,AND=3,EOR=4,ORA=5,BIT=6,ASL=7,LSR=8,ROL=9,ROR=10,PASS=11;
-parameter add=7'b0000001,L_shift=7'b0000010,R_shift=7'b0000100,AND_L=7'b0001000,EOR_L=7'b0010000,ORA_L=7'b0100000,BIT_L=7'b1000000;
-always @(posedge clk_1) begin
-        result_buffer<=result;
-        if(!rst) begin
-        case (op)
-                ADD: begin
-                        alu_sel=add;
-                        cin=0;
-                        sh_r=1'bx;
-                end
-                ADC: begin
-                        alu_sel=add;
-                        cin=status[7];
-                        sh_r=1'bx;
-                end
-                SBC: begin
-                        alu_sel=add;
-                        cin=1'b1;
-                        sh_r=1'bx;
-                end
-                AND: begin
-                        alu_sel=AND_L;
-                        cin=1'bx;
-                        sh_r=1'bx;
-                end
-                EOR: begin
-                        alu_sel=EOR_L;
-                        cin=1'bx;
-                        sh_r=1'bx;
-                end
-                ORA: begin
-                        alu_sel=ORA_L;
-                        cin=1'bx;
-                        sh_r=1'bx;
-                end
-                BIT: begin
-                        alu_sel=BIT_L;
-                        cin=1'bx;
-                        sh_r=1'bx;
-                end
-                ASL: begin
-                        alu_sel=L_shift;
-                        cin=status[7];
-                        sh_r=1'b1;
-                end
-                LSR: begin
-                        alu_sel=R_shift;
-                        cin=status[7];
-                        sh_r=1'b1;
-                end
-                ROL: begin
-                        alu_sel=L_shift;
-                        cin=status[7];
-                        sh_r=1'b0;
-                end
-                ROR: begin
-                        alu_sel=R_shift;
-                        cin=status[7];
-                        sh_r=1'b0;
-                end
-                default: begin
-                alu_sel=0;
-                cin=0;
-                sh_r=1'bx;
-                end
-        endcase
-        end
+always @(posedge rst ) begin
+    accumulator_buffer<=8'h00;
+    operand_2_buffer<=8'h00;
+    status_buffer<=8'h00;
+    alu_sel<=7'b0000000;
 end
-always @(posedge clk_2) begin
-    if(!rst) begin
+
+always @(posedge clk_2 ) begin
         accumulator_buffer<=accumulator;
-        if(op==SBC) begin
-                operand<=~operand_2;
-        end
-        else begin
-                operand<=operand_2;
-        end
-    end
+        operand_2_buffer<=operand_2;
+        status_buffer<=status_in;
+        case(alu_op) 
+                ADD: alu_sel<=7'b0000001;
+                ADC: alu_sel<=7'b0000001;
+                SBC: alu_sel<=7'b0000001;
+                AND: alu_sel<=7'b0000010;
+                EOR: alu_sel<=7'b0000100;
+                ORA: alu_sel<=7'b0001000;
+                BIT: alu_sel<=7'b0010000;
+                ASL: alu_sel<=7'b0100000;
+                ROL: alu_sel<=7'b0100000;
+                LSR: alu_sel<=7'b1000000;
+                ROR: alu_sel<=7'b1000000;
+                PASS: alu_sel<=7'b0000000;
+        endcase
 end
 
-adder ad(accumulator_buffer,operand,cin,alu_sel[0],result_temp_adder,status_out_temp_add[7],status_out_temp_add[1]);
-adder ads(result_temp_adder,~{7'd0,status[7]},1'b1,alu_sel[0],result_temp_sub,status_out_temp_sub[7],status_out_temp_sub[1]);
-mux_2x1 #(8) ma1(alu_sel[0],!(op==SBC),result_temp_adder,result_temp_sub,result_temp_bypass);
-mux_2x1 #(8) ma2(alu_sel[0],!(op==SBC),status_out_temp_add,status_out_temp_sub,status_out);
-l_shift ls(alu_sel[1],sh_r,cin,operand,status_out[7],result_temp_bypass);
-r_shift rs(alu_sel[2],sh_r,cin,operand,status_out[7],result_temp_bypass);
-and_l an(alu_sel[3],accumulator_buffer,operand,result_temp_bypass);
-eor_l er(alu_sel[4],accumulator_buffer,operand,result_temp_bypass);
-ora_l ol(alu_sel[5],accumulator_buffer,operand,result_temp_bypass);
-bit_l bt(alu_sel[6],accumulator_buffer,operand,result_temp_bypass,status_out[1]);
+adder ad(alu_sel[0],(alu_op==SBC?1'b0:1'b1),accumulator_buffer,operand_2_buffer,status_buffer[7],result_buff,cout);
+l_shift ls (alu_sel[5],(alu_op==ASL?1'b1:1'b0),status_buffer[7],accumulator_buffer,cout,result_buff);
 
-assign result=(op==PASS)?operand_2:result_temp_bypass;
+r_shift rs(alu_sel[6],(alu_op==LSR?1'b1:1'b0),status_buffer[7],accumulator_buffer,cout,result_buff);
 
-assign status_out[6]=~(|result);
-assign status_out[0]=result[7];
-assign result_out=result_buffer;
+and_l an(alu_sel[1],accumulator_buffer,operand_2_buffer,result_buff);
+
+eor_l eor(alu_sel[2],accumulator_buffer,operand_2_buffer,result_buff);
+
+ora_l org(alu_sel[3],accumulator_buffer,operand_2_buffer,result_buff);
+
+bit_l bit(alu_sel[4],accumulator_buffer,operand_2_buffer,result_buff,status_out[2]);
+
+mux_2x1 #(8) m1(1'b1,|alu_sel,accumulator_buffer,result_buff,result);
+
+assign status_out[7]=(alu_sel[0]|alu_sel[5]|alu_sel[6])?cout:status_buffer[7];              //carry
+assign status_out[6]=alu_op==PASS?status_buffer[6]:~|result_buff;              //zero
+assign status_out[5]=status_buffer[5];      //interrupt_disable
+assign status_out[4]=status_buffer[4];      //decimal_mode
+assign status_out[3]=status_buffer[3];      //break_cmd
+assign status_out[2]=status_buffer[2];      //overflow
+assign status_out[1]=alu_op==PASS?status_buffer[1]:result_buff[7];             //negative
+assign status_out[0]=status_buffer[0];      //unused
 
 
 endmodule
-
-
 
 
 module and_l (

@@ -87,8 +87,8 @@ always @(negedge clk_2) begin
                                         pc_data_buffer=1;   //address from pc
                                         x_con_buffer=0;     //write to x register
                                         y_con_buffer=0;     //write y register
-                                        accumulator_con_buffer=1;   //write to accumulator
-                                        status_con_buffer=1;    //write to status register
+                                        accumulator_con_buffer=0;   //write to accumulator
+                                        status_con_buffer=0;    //write to status register
                                         stack_pointer_con_buffer=0;  //write to stack pointer
                                         alu_op_buffer=ADC;     //ADC operation
                                         branch_op_buffer=3'hx;     //no branch
@@ -105,8 +105,8 @@ always @(negedge clk_2) begin
                                         pc_data_buffer=1;   //address from pc
                                         x_con_buffer=0;     //write to x register
                                         y_con_buffer=0;     //write y register
-                                        accumulator_con_buffer=0;   //write to accumulator
-                                        status_con_buffer=0;    //write to status register
+                                        accumulator_con_buffer=1;   //write to accumulator
+                                        status_con_buffer=1;    //write to status register
                                         stack_pointer_con_buffer=0;  //write to stack pointer
                                         alu_op_buffer=ADC;     //ADC operation
                                         branch_op_buffer=3'hx;     //no branch
