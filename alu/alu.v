@@ -1,7 +1,7 @@
-`include "adder.v"                //please change the addresses accordingly
-`include "l_shift.v"
-`include "r_shift.v"
-`include "../mux.v"                      //turn on while testing alu individually
+`include "./alu/adder.v"                //please change the addresses accordingly
+`include "./alu/l_shift.v"
+`include "./alu/r_shift.v"
+//`include "./mux.v"                      //turn on while testing alu individually
 
 module alu(rst,clk_1,clk_2,accumulator,operand_2,status_in,alu_op,result,status_out);
 
