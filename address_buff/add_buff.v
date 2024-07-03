@@ -5,7 +5,7 @@ module add_buff (rst,clk_1,clk_2,
                 address
 );
 
-input wire rst,clk_1,clk_2,en;
+input wire rst,clk_1,clk_2;
 input wire[1:0] access_type;
 input wire [7:0] data_bus,data_x,data_y,data_sp;
 input wire [15:0] pc_in;
