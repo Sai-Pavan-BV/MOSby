@@ -3,8 +3,9 @@ input wire en,a_s,cin;
 input wire [7:0] a,b;
 output wire cout;
 output wire [7:0] result;
-assign {cout,result}=en?(a_s?a+b+cin:a-b-cin):9'bz;
+assign {cout,result}=en? a_s?a+b+cin:a-b-cin :9'bz;
 endmodule
+
 module full_adder(a_s,a,b,cin,r,cout);
 input wire a_s,a,b,cin;
 output wire r,cout;

@@ -10,7 +10,7 @@ always #5 clk = ~clk;
 
 initial begin
     $dumpfile("mosby.vcd");
-    $dumpvars(1,pro);
+    $dumpvars(0,pro);
     clk = 0;
     rst = 0;
     #1 rst = 1;
